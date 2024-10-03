@@ -2,7 +2,9 @@ package com.example.lab6.controller;
 
 import com.example.lab6.entity.Artista;
 import com.example.lab6.entity.Evento;
+import com.example.lab6.repository.ArtistaEventoRepository;
 import com.example.lab6.repository.ArtistaRepository;
+
 import com.example.lab6.repository.EventoRepository;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -21,10 +23,14 @@ public class menuController {
 
     final EventoRepository eventoRepository;
     final ArtistaRepository artistaRepository;
+    final ArtistaEventoRepository artistaEventoRepository;
 
-    public menuController(EventoRepository eventoRepository, ArtistaRepository artistaRepository) {
+
+    public menuController(EventoRepository eventoRepository, ArtistaRepository artistaRepository,ArtistaEventoRepository artistaEventoRepository) {
         this.eventoRepository = eventoRepository;
         this.artistaRepository = artistaRepository;
+        this.artistaEventoRepository=artistaEventoRepository;
+
     }
 
     @GetMapping("/inicio")
@@ -52,6 +58,7 @@ public class menuController {
             evento = eventoOptional.get();
             model.addAttribute("evento", evento);
             model.addAttribute("eventList",eventoRepository.findAll());
+            model.addAttribute("artistasEvento",artistaRepository.findArtistasByEventoId(id));
             return "editEventos";
         }else{
             return "redirect:/EventMaster/eventos";
@@ -81,6 +88,14 @@ public class menuController {
     @GetMapping("/contactos")
     public String contacto (){
         return "contactos";
+    }
+
+    @GetMapping("/deleteArtistaEvento")
+    public String deleteArtistaEvento(@RequestParam("idArtista") Integer idArtista, @RequestParam("idEvento") Integer idEvento) {
+
+        artistaEventoRepository.deleteByArtistaIdAndEventoId(idArtista, idEvento);
+
+        return "redirect:/EventMaster/eventos";
     }
     @GetMapping("/nuevoArtista")
     public String nuevoArtista (@ModelAttribute("artista") Artista artista, Model model){

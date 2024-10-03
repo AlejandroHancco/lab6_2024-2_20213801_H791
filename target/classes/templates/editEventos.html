@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,6 +52,38 @@
 
         </div>
     </form>
+
+
+
+    <div th:if="${artistasEvento != null && !artistasEvento.isEmpty()}">
+        <hr>
+        <h2>Artistas</h2>
+        <hr class="opacity-0">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre del Artista</th>
+                <th>Teléfono</th>
+                <th>Eliminar</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="artista : ${artistasEvento}">
+                <td th:text="${artista.artistaId}"></td>
+                <td th:text="${artista.nombre}"></td>
+                <td th:text="${artista.telefono}"></td>
+                <td>
+                    <a class="btn btn-danger btn-sm"
+                       th:href="@{/EventMaster/deleteArtistaEvento(idArtista=${artista.artistaId}, idEvento=${evento.eventoId})}"
+                       title="Eliminar">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
 
 
